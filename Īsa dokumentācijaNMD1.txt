@@ -1,0 +1,23 @@
+Autors: Mārtiņš Mickus, St.Apl.Nr:mm19082
+
+Programma ģenerē vārdus garumā līdz 15 (ieskaitot) gramatikā:
+G=({E,I},{x, 0, 1, +, *, (, )}, P, E)
+E -> E + E|E * E|(E)|xI
+I -> 0I | 1I | 0 | 1 
+Opcijas ļauj izdrukāt vārdus uz ekrāna, kā arī tie vienmēr tiek ierakstīti failā Words.txt palaišanas mapē.
+Ir iespēja izmantot divu veidu ģenerātorus:
+1. Vārdi tiek ģenerēti mainot visus terminālos simbolus uzreiz. Zinot to, ka esošie vārda neterminālie simboli kaut kad tiks aizstāti, netiek tērēts laiks iegūstot visas vārdu kombinācijas, kas satur neterminālos simbolus. Tiek izmantots masīvs, piemēram, a[i] = {0,0,0,0}, kas tiek mainīts => {1,0,0,0},{2,0,0,0},{0,1,0,0},...,{2,2,2,2} un ar attiecīgā indeksa numuru i-tais neterminālais simbols vārdā tiek aizstāts ar attiecīgo produkciju. (Ātri)
+2. Vārdi tiek ģenerēti mainot katru terminālo simbolu atsevišķi. (Lēni)
+Rezultātā ir iespējams iegūt sarakstu ar gala derīgajiem vārdiem vai arī vārdiem, kas satur arī neterminālos simbolus. Programma norāda skaitu, cik vārdi ir uzģenerēti.
+
+(Programma Debug režīmā ir DAUDZ reižu lēnāka nekā Release režīmā)
+Palaižot programmu:
+1. No sākuma tiek prasīts vai izdrukāt gala vārdu uzreiz, kad tas tiek atrasts. Jā vai Nē. (Rekomendācija (n), Nē)
+2. Nākamajā solī programma jautā kuru iepriekšminēto ģeneratora veidu izvēlēties. Jā — 2. veids, Nē — 1. veids. (Rekomendācija (n), Nē — 1. veids)
+3. Seko informatīvs ziņojums par to, ka vārdu saglabāšana var notikt tikai pēc ģenerēšanas. Lai sāktu, jānospiež jebkurš taustiņš. (Ir iespēja uzņemt laiku, piemēram, hronometrā)
+4. Tālāk programma informatīvi ziņo par maksimāli sasniegto ģenerēšanas dziļumu, kas atbilst mainot katru terminālo simbolu atsevišķi. Tiek arī pateikts, kopējo, jauni atrasto un gala uzģenerēto vārdu skaits konkrētajā solī.
+5. Pēc galvenās darbības tiek prasīts vai izdrukāt vārdus uz ekrāna. Jā vai Nē. (Rekomendācija (n), Nē)
+6. Tiek prasīts vai saglabāt un/vai izdrukāt (kā iepriekš norādīts) tikai gala vārdus vai arī tos, kas satur neterminālos simbolus. Jā — Visus, Nē — Tikai gala. (Rekomendācija (n), Nē - Tikai gala)
+7. Vārdi tiek izdrukāti un/(vai tikai) saglabāti failā (Words.txt).
+
+Programmā ir palikusi atkļūdošanas rindiņa, kad tiek ģenerēti vārdi no vārda "E+E+E+E", tad uz ekrāna tiek izdrukāts: Hi
