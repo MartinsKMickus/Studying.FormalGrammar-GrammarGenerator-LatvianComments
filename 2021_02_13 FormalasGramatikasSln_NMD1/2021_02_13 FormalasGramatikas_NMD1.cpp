@@ -536,27 +536,33 @@ int main()
 {
 	vector<vector<string>> rul = vector<vector<string>>(); // Instrukcijas par gramatiku.
 	bool dev = false, fast = true;
-	vector<string> ru2;
-	ru2.push_back("E");
-	//ru2.push_back("0");
-	//ru2.push_back("1");
-	ru2.push_back("E+E");
-	ru2.push_back("E*E");
-	ru2.push_back("(E)");
-	ru2.push_back("xI");
-	vector<string> ru3;
-	ru3.push_back("I");
-	ru3.push_back("0I");
-	ru3.push_back("1I");
-	ru3.push_back("0");
-	ru3.push_back("1");
-	//ru4.push_back("ripo");
-	//ru4.push_back("lido");
-	rul.push_back(ru2);
-	rul.push_back(ru3);
+	vector<string> rules;
+	cout << "Enter Terminal Symbol: ";
+	auto button = _getch();
+	cout << endl;
+	string rule, start = "";
+	while (button != ' ')
+	{
+		rules.push_back(string(1, button));
+		cout << "Enter Rule for " << string(1, button) << " and press enter: ";
+		cin >> rule;
+		while (rule != "~")
+		{
+			rules.push_back(rule);
+			cout << "Enter next Rule (To stop, enter ~): ";
+			cin >> rule;
+		}
+		rul.push_back(rules);
+		rules.clear();
+		cout << "Enter next Terminal Symbol (To stop press space): ";
+		button = _getch();
+		cout << endl;
+	}
+	cout << "Enter Start Word: ";
+	cin >> start;
 	cout << "Show final words on screen (when generating)? y/n " << endl;
 	cout << endl;
-	auto button = _getch();
+	button = _getch();
 	if (button == 'y') dev = true;
 	cout << "Use slower generator to get all words with no terminal symbols? (Must be on for correct total words generation)" << endl;
 	cout << "Does not affect final terminal word count. Recommended off!!! (n) y/n" << endl;
@@ -574,7 +580,7 @@ int main()
 	_getch();
 	cout << endl;
 	cout << endl;
-	FreeContextGrammar grammargen = FreeContextGrammar("E", rul, 15, dev, fast);
+	FreeContextGrammar grammargen = FreeContextGrammar(start, rul, 15, dev, fast);
 
 	cout << "---------------------------------------------------------------" << endl;
 	while (grammargen.ReadyWords < grammargen.NewWordsEnd) // Kad vairs nebûs pieejami jauni vârdi.
