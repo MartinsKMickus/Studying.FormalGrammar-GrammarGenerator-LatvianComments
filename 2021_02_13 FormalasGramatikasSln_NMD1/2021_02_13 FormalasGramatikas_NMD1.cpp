@@ -379,7 +379,7 @@ public: vector<vector<string>> rules, Rules = vector<vector<string>>();
 		  return Rsize;
 	  }
 	  /// <summary>
-	  /// Pârbaude vai vârds jau nav uzìenerçts.
+	  /// Pârbaude vai vârdâ ir neterminâlie simboli.
 	  /// </summary>
 	  /// <param name="w">Vârds kuru pârbaudît.</param>
 	  void GetFinWords(string w)
