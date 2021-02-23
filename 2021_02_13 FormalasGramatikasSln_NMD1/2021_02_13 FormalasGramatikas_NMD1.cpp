@@ -362,7 +362,7 @@ public: vector<vector<string>> rules, Rules = vector<vector<string>>();
 	  /// </summary>
 	  /// <param name="w">Vârds kuru pârbaudît.</param>
 	  /// <returns>Atgrieþ mazâko iespçjamo vârda garumu òemot vçrâ tikai vârdâ esoðos neterminâlos simbolus.</returns>
-	  int PassLong(string w)
+	  int PassLong(string& w)
 	  {
 		  int Rsize = 0;
 		  Rsize = w.size();
@@ -379,16 +379,16 @@ public: vector<vector<string>> rules, Rules = vector<vector<string>>();
 		  return Rsize;
 	  }
 	  /// <summary>
-	  /// Pârbaude vai vârds jau nav uzìenerçts.
+	  /// Pârbaude vai vârdâ nav terminâlie simboli.
 	  /// </summary>
 	  /// <param name="w">Vârds kuru pârbaudît.</param>
-	  void GetFinWords(string w)
+	  void GetFinWords(string& w)
 	  {
 		  int Rsize = 0;
 		  Rsize = w.size();
 		  for (int pos = 0; pos < Rules.size(); pos++)
 		  {
-			  for (int p = 0; p < w.size(); p++)
+			  for (int p = 0; p < Rsize; p++)
 			  {
 				  if (w[p] == Rules[pos].front()[0])
 				  {
@@ -407,7 +407,7 @@ public: vector<vector<string>> rules, Rules = vector<vector<string>>();
 	  /// <param name="rule">Kurð neterminâlais simbols jâòem vçrâ.</param>
 	  /// <param name="extrules">Neterminâlâ simbola instrukcijas.</param>
 	  /// <param name="divide">Kuras instrukcijas jâizmanto pçc kârtas vârdam atrastajâ simbolâ. (Ja vârdâ ir, piemçram, èetri attiecîgie neterminâlie simboli, tad arî instrukcijas bûs pa èetrâm)</param>
-	  bool GetWords(string w, char rule, vector<string> extrules, vector<int> divide)
+	  bool GetWords(string& w, char& rule, vector<string>& extrules, vector<int>& divide)
 	  {
 		  MyList* RepW = new MyList(w);
 		  bool SpoiledLong = false;
@@ -427,7 +427,7 @@ public: vector<vector<string>> rules, Rules = vector<vector<string>>();
 		  return SpoiledLong;
 
 	  }
-	  void GetAllWords(string w, char rule, vector<string> extrules, int divide, int repRule)
+	  void GetAllWords(string& w, char& rule, vector<string>& extrules, int& divide, int& repRule)
 	  {
 		  MyList* RepW = new MyList(w);
 		  int letPos = 0, rulecycle = 0;
