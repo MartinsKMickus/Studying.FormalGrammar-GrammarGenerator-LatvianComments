@@ -536,6 +536,7 @@ int main()
 {
 	vector<vector<string>> rul = vector<vector<string>>(); // Instrukcijas par gramatiku.
 	bool dev = false, fast = true;
+	int WSize = 15;
 	vector<string> rules;
 	cout << "Enter Terminal Symbol: ";
 	auto button = _getch();
@@ -560,6 +561,8 @@ int main()
 	}
 	cout << "Enter Start Word: ";
 	cin >> start;
+	cout << "Enter Max Word Size That Can Be Generated (Affects speed): ";
+	cin >> WSize;
 	cout << "Show final words on screen (when generating)? y/n " << endl;
 	cout << endl;
 	button = _getch();
@@ -580,7 +583,7 @@ int main()
 	_getch();
 	cout << endl;
 	cout << endl;
-	FreeContextGrammar grammargen = FreeContextGrammar(start, rul, 15, dev, fast);
+	FreeContextGrammar grammargen = FreeContextGrammar(start, rul, WSize, dev, fast);
 
 	cout << "---------------------------------------------------------------" << endl;
 	while (grammargen.ReadyWords < grammargen.NewWordsEnd) // Kad vairs nebûs pieejami jauni vârdi.
