@@ -2,6 +2,7 @@
 //
 #include <iostream>
 #include <fstream> // Saglabâðanai failâ
+#include <list>
 #include <vector> // Âtrai vârdu apstrâdei.
 #include <set> // Koku veidoðanai, lai notiktu âtrâka apstrâde.
 #include <conio.h> // Lietotâjam
@@ -15,163 +16,18 @@ using namespace std;
 
 
 /// <summary>
-/// Saistîtais saraksts int skaitïiem.
-/// </summary>
-class IntList
-{
-	struct Block
-	{
-		int value = 0;
-		Block* next = NULL;
-	};
-	Block* First = NULL;
-public: int count = 0, val = 0;
-	  IntList(int count, int val)
-	  {
-		  Block* p;
-		  First = new Block;
-		  p = First;
-		  p->value = val;
-		  while (count-- > 1)
-		  {
-			  p->next = new Block;
-			  p = p->next;
-			  //p->value = 0;
-		  }
-	  }
-	  int Get(int at)
-	  {
-		  auto p = First;
-		  for (at--; at >= 0; at--)
-		  {
-			  p = p->next;
-		  }
-
-		  return p->value;
-	  }
-	  void Set(int at, int val)
-	  {
-		  auto p = First;
-		  for (at--; at >= 0; at--)
-		  {
-			  p = p->next;
-		  }
-		  p->value = val;
-
-	  }
-	  void Add(int at)
-	  {
-		  auto p = First;
-		  for (at--; at >= 0; at--)
-		  {
-			  p = p->next;
-		  }
-		  p->value++;
-	  }
-	  void Remove(int at)
-	  {
-		  auto p = First;
-		  for (at--; at >= 0; at--)
-		  {
-			  p = p->next;
-		  }
-		  p->value--;
-	  }
-	  ~IntList()
-	  {
-		  for (auto p = First; First != NULL; p = First)
-		  {
-			  First = First->next;
-			  delete p;
-		  }
-		  //cout << "List Destroyed!";
-		  //cout << endl;
-	  }
-};
-/// <summary>
 /// Atïauj viegli pa vidu char virknei iespraust string.
 /// </summary>
-class MyList
-{
-	struct Block
-	{
-		char value = NULL;
-		Block* next = NULL;
-	};
-	Block* First = NULL;
-public: int size = 0;
-	  MyList(string start)
-	  {
-		  auto b = new Block;
-		  First = b;
-		  b->value = start[0];
-		  size++;
-		  for (int pos = 1; pos < start.size(); pos++)
-		  {
-			  b->next = new Block;
-			  b = b->next;
-			  b->value = start[pos];
-			  size++;
-		  }
-	  }
-	  string Print()
-	  {
-		  string product;
-		  for (auto p = First; p != NULL; p = p->next)
-		  {
-			  product += p->value;
-			  //cout << p->value;
-		  }
-		  return product;
-	  }
-	  char Get(int at)
-	  {
-		  auto p = First;
-		  for (at--; at >= 0; at--)
-		  {
-			  p = p->next;
-		  }
-		  return p->value;
-	  }
-	  void Replace(int at, string rep)
-	  {
-		  auto p = First, temp = First->next;
 
-		  for (at--; at >= 0; at--)
-		  {
-			  p = p->next;
-		  }
-		  temp = p->next;
-		  p->value = rep[0];
-
-		  for (int pos = 1; pos < rep.size(); pos++)
-		  {
-			  p->next = new Block;
-			  p = p->next;
-			  p->value = rep[pos];
-			  size++;
-		  }
-		  p->next = temp;
-	  }
-	  ~MyList()
-	  {
-		  for (auto p = First; First != NULL; p = First)
-		  {
-			  First = First->next;
-			  delete p;
-		  }
-		  //cout << "List Destroyed!";
-		  //cout << endl;
-	  }
-};
 
 class FreeContextGrammar
 {
 public: int ReadyWords = 0, NewWordsEnd = 0, TreeDepth = 0;
 	  int LetterCount = 0, RuleCount = 0, AllowedSize = 0;
-	  bool developer = false, fast = true;
+	  bool developer = false;
+	  list<string> FinalWords;
 	  vector<string> Words;
-	  set<string> FastWords, FinalWords;
+	  set<string> FastWords;
 	  vector<int> Rsizes;
 	  ofstream wordsF;
 public: vector<vector<string>> rules, Rules = vector<vector<string>>();
@@ -182,21 +38,17 @@ public: vector<vector<string>> rules, Rules = vector<vector<string>>();
 	  /// <param name="rules">Noteikumi sarakstâ, kas satur sarakstus ar string (pirmie simboli apzîmç neterminâlo simbolu, pçc tam paði noteikumi attiecîgajiem simboliem).</param>
 	  /// <param name="allows">Cik garus gala vârdus drîkst ìenerçt.</param>
 	  /// <param name="dev">Izdrukâ gala tipa vârdu, kad tas tiek atrasts.</param>
-	  FreeContextGrammar(string Start, vector<vector<string>> rules, int allows = 20, bool dev = false, bool F = true)
+	  FreeContextGrammar(string Start, vector<vector<string>> rules, int allows = 20, bool dev = false)
 	  {
-		  fast = F;
 		  AllowedSize = allows;
 		  Words.push_back(Start);
-
 		  developer = dev;
-
 		  int searchCycle = 0, smallest = allows;
-		  for(int pos = 0; pos<rules.size();pos++)
+		  for (int pos = 0; pos < rules.size(); pos++)
 		  {
 			  Rules.push_back(rules[pos]);
-			  //searchCycle = 0;
 			  smallest = allows;
-			  for(int pos1 = 0; pos1<rules[pos].size();pos1++)
+			  for (int pos1 = 0; pos1 < rules[pos].size(); pos1++)
 			  {
 				  if (pos1 > 0)
 				  {
@@ -205,11 +57,9 @@ public: vector<vector<string>> rules, Rules = vector<vector<string>>();
 						  smallest = rules[pos][pos1].size();
 					  }
 				  }
-				  //searchCycle++;
 			  }
 			  Rsizes.push_back(smallest);
 		  }
-
 		  NewWordsEnd++;
 	  }
 	  /// <summary>
@@ -217,38 +67,16 @@ public: vector<vector<string>> rules, Rules = vector<vector<string>>();
 	  /// </summary>
 	  void GoDeeper()
 	  {
-		  bool spoiledLong = false;
-		  vector<int> divide; // Reprezentçs visa veida noteikumu pârveidojumus (Piemçram: 4*4*4*4, kad vârds ir (E)+(E+E)*E)
 		  char rule;
 		  string w;
-		  int ruleloop = 0, sruleloop = 0;// , ruleCount = 0, letterCount = 0;
-		  vector<string> extractedRules;
-		  int MaxDepthJump = 1;
 		  for (int pos = ReadyWords; pos < NewWordsEnd; pos++) // Apstrâdâti vârdi un jaunu vârdu sâkums.
 		  {
-
-
 			  w = Words[pos];
-			  if (w == "E+E+E+E")
-			  {
-				  cout << "Hi";
-			  }
-
 
 			  for (int innerrulepos = 0; innerrulepos < Rules.size(); innerrulepos++) // jâiziet caur katru gramatikas notiekumu neterminâlajiem simboliem.
 			  {
 				  rule = Rules[innerrulepos].front()[0]; // Atrodam attiecîgos noteikumus. Pirmais simbols neterminâlais simbols.
 				  RuleCount = Rules[innerrulepos].size() - 1;
-
-				  for (int pos = 0; pos < Rules[innerrulepos].size(); pos++)
-				  {
-					  if (pos > 0) // Noteikumos nerakstîsim paðu neterminâlo simbolu.
-					  {
-						  extractedRules.push_back(Rules[innerrulepos][pos]);
-					  }
-					  //sruleloop++;
-				  }
-				  //sruleloop = 0;
 
 				  for (int innerpos = 0; innerpos < w.size(); innerpos++)
 				  {
@@ -259,118 +87,39 @@ public: vector<vector<string>> rules, Rules = vector<vector<string>>();
 				  }
 				  if (LetterCount > 0)
 				  {
-					  //IntList* divide = new IntList(LetterCount, -1); // Paðtaisîta datu struktûra.
-				  //for (int change = 0; ; change = 0)
-				  //{
-				  //	divide->Add(change);
-				  //	if (divide->Get(change) < RuleCount)
-				  //	{
-				  //		//change = -1;
-				  //	}
-				  //	else
-				  //	{
-				  //		/*divide->Set(change, 0);
-				  //		divide->Add(++change);*/
-				  //		while (divide->Get(change) >= RuleCount - 1 && change < LetterCount - 1)
-				  //		{
-				  //			divide->Set(change, 0);
-				  //			divide->Add(++change);
-				  //		}
-				  //		/*if (change == LetterCount - 1 && divide->Get(change) == RuleCount - 1)
-				  //		{
-				  //			divide->Add(change);
-				  //		}*/
-				  //		if (divide->Get(LetterCount - 1) > RuleCount - 1)
-				  //		{
-				  //			/*_beep(500, 500);*/
-				  //			break;
-				  //		}
-				  //			
-				  //	}
-				  //	GetWords(w, rule, extractedRules, divide);
-				  //	//Print();
-				  //	//cout << endl;
-				  //}
-					  
-					  if (fast)
+					  for (int pos = 0; pos < 1; pos++)
 					  {
-						  
-						  if (MaxDepthJump < LetterCount) MaxDepthJump = LetterCount;
-						  divide = vector<int>(LetterCount); // Izmantojot vektoru ìenerçsim variantus => 000, 100, 200, 300, 010, 020,... (Lai visos variantos uzìenerçtu jaunus vârdus.)
-						  divide[0] = -1;
-						  for (int p = 1; p < LetterCount; p++)
+						  for (int p = 0; p < RuleCount; p++)
 						  {
-							  divide[p] = 0;
-						  }
-						  for (int change = 0; ; change = 0)
-						  {
-							  divide[change]++;
-							  if (divide[change] < RuleCount)
-							  {
-								  //change = -1;
-							  }
-							  else
-							  {
-								  while (divide[change] >= RuleCount && change < LetterCount - 1)
-								  {
-									  divide[change] = 0;
-									  divide[++change]++;
-								  }
-								  if (divide[LetterCount - 1] > RuleCount - 1)
-								  {
-									  break;
-								  }
-
-							  }
-							  if (!spoiledLong)
-							  {
-								  spoiledLong = GetWords(w, rule, extractedRules, divide);
-							  }
-							  else
-							  {
-								  GetWords(w, rule, extractedRules, divide);
-							  }
-						  }
-						  
-					  }
-					  else
-					  {
-						  for (int pos = 0; pos < LetterCount; pos++)
-						  {
-							  for (int p = 0; p < RuleCount; p++)
-							  {
-								  GetAllWords(w, rule, extractedRules, pos, p);
-							  }
+							  GetAllWords(w, rule, Rules[innerrulepos], p);
 						  }
 					  }
 				  }
-				  extractedRules.clear();
 				  LetterCount = 0;
 				  RuleCount = 0;
 
 			  }
 			  ReadyWords++;
 		  }
-
-		  //NewWordsStart = Words->size;
 		  NewWordsEnd = Words.size();
-		  if (spoiledLong) MaxDepthJump = 1;
-		  TreeDepth+= MaxDepthJump;
+		  TreeDepth++;
 	  }
 	  /// <summary>
 	  /// Vârda pârbaude uz garumu pçc nâkamâ pârveidojuma.
 	  /// </summary>
 	  /// <param name="w">Vârds kuru pârbaudît.</param>
 	  /// <returns>Atgrieþ mazâko iespçjamo vârda garumu òemot vçrâ tikai vârdâ esoðos neterminâlos simbolus.</returns>
-	  int PassLong(string w)
+	  int PassLong(string& w)
 	  {
-		  int Rsize = 0;
-		  Rsize = w.size();
-		  for(int pos = 0; pos < Rules.size(); pos++)
+		  int Rsize = w.size();
+		  char test;
+		  //Rsize = w.size();
+		  for (int pos = 0; pos < Rules.size(); pos++)
 		  {
+			  test = Rules[pos].front()[0];
 			  for (int p = 0; p < w.size(); p++)
 			  {
-				  if (w[p] == Rules[pos].front()[0])
+				  if (w[p] == test)
 				  {
 					  Rsize += Rsizes[pos] - 1;
 				  }
@@ -379,25 +128,28 @@ public: vector<vector<string>> rules, Rules = vector<vector<string>>();
 		  return Rsize;
 	  }
 	  /// <summary>
-	  /// Pârbaude vai vârds jau nav uzìenerçts.
+	  /// Pârbaude vai vârdâ ir neterminâlie simboli.
 	  /// </summary>
 	  /// <param name="w">Vârds kuru pârbaudît.</param>
-	  void GetFinWords(string w)
+	  void GetFinWords(string& w)
 	  {
-		  int Rsize = 0;
-		  Rsize = w.size();
+		  int Rsize = w.size();
+		  //Rsize = w.size();
+		  char test;
 		  for (int pos = 0; pos < Rules.size(); pos++)
 		  {
-			  for (int p = 0; p < w.size(); p++)
+			  test = Rules[pos].front()[0];
+			  for (int p = 0; p < Rsize; p++)
 			  {
-				  if (w[p] == Rules[pos].front()[0])
+				  if (w[p] == test)
 				  {
+					  FastWords.emplace(w);
 					  return;
 				  }
 			  }
 		  }
 		  if (developer) cout << w << endl;
-		  FinalWords.insert(w);
+		  FinalWords.emplace_back(w);
 	  }
 
 	  /// <summary>
@@ -406,68 +158,31 @@ public: vector<vector<string>> rules, Rules = vector<vector<string>>();
 	  /// <param name="w">Vârds no kura jâiegûst vârdi.</param>
 	  /// <param name="rule">Kurð neterminâlais simbols jâòem vçrâ.</param>
 	  /// <param name="extrules">Neterminâlâ simbola instrukcijas.</param>
-	  /// <param name="divide">Kuras instrukcijas jâizmanto pçc kârtas vârdam atrastajâ simbolâ. (Ja vârdâ ir, piemçram, èetri attiecîgie neterminâlie simboli, tad arî instrukcijas bûs pa èetrâm)</param>
-	  bool GetWords(string w, char rule, vector<string> extrules, vector<int> divide)
+	  /// <param name="repRule">Kurð i-tais noteikums jâizmanto</param>
+	  void GetAllWords(string w, char& rule, vector<string>& extrules, int& repRule)
 	  {
-		  MyList* RepW = new MyList(w);
-		  bool SpoiledLong = false;
-		  int letPos = 0, rulecycle = 0;
-		  for (int p = 0; letPos < LetterCount; p++) // p - Pârbaudâmâ burta pozîcija. letPos - nomainîto simbolu skaits.
+		  int WSize = w.size();
+		  for (int p = 0; p < WSize; p++) // p - Pârbaudâmâ burta pozîcija. letPos - nomainîto simbolu skaits.
 		  {
-			  if (RepW->Get(p) == rule) // Ja vârdâ tiek atrasts simbols.
+			  if (w[p] == rule) // Ja vârdâ tiek atrasts simbols.
 			  {
-				  RepW->Replace(p, extrules[divide[letPos]]);
-				  p += extrules[divide[letPos]].size() - 1;
-				  letPos++;
+				  w.replace(p, 1, extrules[repRule + 1]);
+				  break;
 			  }
 		  }
-
-		  SpoiledLong = AddWord(RepW->Print());
-		  delete RepW;
-		  return SpoiledLong;
-
+		  AddWord(w);
 	  }
-	  void GetAllWords(string w, char rule, vector<string> extrules, int divide, int repRule)
+	  void AddWord(string& w)
 	  {
-		  MyList* RepW = new MyList(w);
-		  int letPos = 0, rulecycle = 0;
-		  for (int p = 0; letPos < LetterCount; p++) // p - Pârbaudâmâ burta pozîcija. letPos - nomainîto simbolu skaits.
+		  if (PassLong(w) > AllowedSize) return;
+
+		  if (FastWords.find(w) != FastWords.end()) 
 		  {
-			  if (RepW->Get(p) == rule) // Ja vârdâ tiek atrasts simbols.
-			  {
-				  if (letPos == divide)
-				  {
-					  RepW->Replace(p, extrules[repRule]);
-					  break;
-				  }
-				  letPos++;
-			  }
+			  return;
 		  }
 
-		  AddWord(RepW->Print());
-		  delete RepW;
-
-	  }
-	  bool AddWord(string Word)
-	  {
-
-		  if (PassLong(Word) > AllowedSize) return true;
-
-
-		  if (FastWords.find(Word) != FastWords.end())
-		  {
-			  //cout << FastWords.find(Word)->c_str() << endl;
-			  //Sleep(3000);
-			  return false;
-		  }
-		  //wordsF << Word/* +"       " << Words.size()*/ << endl; // Atkïûdoðanai
-
-		  Words.push_back(Word);
-		  FastWords.insert(Word);
-		  GetFinWords(Word);
-		  return false;
-		  //cout << Word + "       " << Words.size() << endl; // Atkïûdoðanai
-		  //cout << endl;
+		  Words.emplace_back(w);
+		  GetFinWords(w);
 	  }
 	  /// <summary>
 	  /// Failâ saglabâ un izdrukâ iegûtos vârdus.
@@ -480,7 +195,7 @@ public: vector<vector<string>> rules, Rules = vector<vector<string>>();
 		  {
 			  if (screen)
 			  {
-				  for (auto const& pair : FinalWords) 
+				  for (auto const& pair : FinalWords)
 				  {
 					  cout << pair.c_str() << endl;
 					  wordsF << pair.c_str() << endl;
@@ -491,7 +206,6 @@ public: vector<vector<string>> rules, Rules = vector<vector<string>>();
 				  cout << "Please wait! Saving words to file..." << endl;
 				  for (auto const& pair : FinalWords)
 				  {
-					  //cout << pair.c_str() << endl;
 					  wordsF << pair.c_str() << endl;
 				  }
 			  }
@@ -511,7 +225,6 @@ public: vector<vector<string>> rules, Rules = vector<vector<string>>();
 				  cout << "Please wait! Saving words to file..." << endl;
 				  for (auto const& pair : FastWords)
 				  {
-					  //cout << pair.c_str() << endl;
 					  wordsF << pair.c_str() << endl;
 				  }
 			  }
@@ -535,7 +248,7 @@ public: vector<vector<string>> rules, Rules = vector<vector<string>>();
 int main()
 {
 	vector<vector<string>> rul = vector<vector<string>>(); // Instrukcijas par gramatiku.
-	bool dev = false, fast = true;
+	bool dev = false;
 	int WSize = 15;
 	vector<string> rules;
 	cout << "Enter Terminal Symbol: ";
@@ -567,13 +280,6 @@ int main()
 	cout << endl;
 	button = _getch();
 	if (button == 'y') dev = true;
-	cout << "Use slower generator to get all words with no terminal symbols? (Must be on for correct total words generation)" << endl;
-	cout << "Does not affect final terminal word count. Recommended off!!! (n) y/n" << endl;
-	button = _getch();
-	if (button == 'y') fast = false;
-
-	cout << endl;
-	cout << endl;
 	//Sleep(2000);
 	cout << "WARNING!!! LIST OF FINAL WORDS ARE SAVED ONLY AFTER EXECUTION. Process could be long!";
 	Sleep(2000);
@@ -583,7 +289,7 @@ int main()
 	_getch();
 	cout << endl;
 	cout << endl;
-	FreeContextGrammar grammargen = FreeContextGrammar(start, rul, WSize, dev, fast);
+	FreeContextGrammar grammargen = FreeContextGrammar(start, rul, WSize, dev);
 
 	cout << "---------------------------------------------------------------" << endl;
 	while (grammargen.ReadyWords < grammargen.NewWordsEnd) // Kad vairs nebûs pieejami jauni vârdi.
